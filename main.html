@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+    
+    <header>
+        <div id="title-name"><img id="title-img" src="/Users/soonhojang/Documents/myProject/front-end/logo.svg"></div>
+    </header>
+    <section class="contents" id="1", name="open">
+        <div class="link-container">
+            <input type="text" value="http://www.naver.com/" id="myInput">
+            <a class="link-btn" onclick="copyLink()">초대링크 복사</a>
+        </div>
+        <div class="members">
+            <div class="members-parent"></div>
+            <div class="member-add-btn-container">
+                <img src="/Users/soonhojang/Documents/myProject/front-end/add.svg" class="add-img-1">
+            </div>
+            <input type="button" class="member-add-btn" value="추가"/>
+            <div class="vertical-line" style="margin-bottom:2px;"></div>
+            <div class="prices">
+                <div class="price-cont">
+                    <div class="price-cont-1">
+                        <div class="price-cont-1-1">
+                            <p>술 값</p>
+                            <p>116,900원</p>
+                        </div>
+                        <div class="price-cont-1-1">
+                            <p>안주 값</p>
+                            <p>54,000원</p>
+                        </div>
+                    </div>
+                    <div class="price-cont-2">
+                        <p>합계</p>
+                        <p>170,900원</p>
+                    </div>
+                </div>
+                <div class="price-cont-s">
+                    <div><input id="check-box" type="checkbox" checked="checked">합계만 입력하기</div>
+                </div>
+            </div>
+            <div class="hor"></div>
+            <div class="bill-contents">
+                <div class="plus-circle flex-row-center"><img src="/Users/soonhojang/Documents/myProject/front-end/add-white.svg" class="add-img-2"></div>
+                <div class="bill-req">영수증을 첨부하세요</div>
+                <form id="form1" enctype="multipart/form-data" method="post" action="Upload.aspx">
+                    <div>
+                        <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" accept="image/*">
+                    </div>
+                    <div>
+                        <input type="button" onclick="uploadFile()" value="업로드" />
+                    </div>
+                    <div id="progress"></div>
+                </form>
+            </div>
+            <div class="vertical-line"></div>
+       
+        </div>
+        <div class="complete-contents">
+            <div class="check-count">모든 인원이 입력이 끝났나요?</div>
+            <a class="complete-btn show-modal open-modal">결제하러 가기</a>
+        </div>
+
+
+        <div class="modal">
+            <div class="modal-contents">
+                <div class="modal-text">결제를 위한 페이지가 생성됐습니다. 주소를<br>복사해 다른 인원에게 공유하세요.</div>
+                <div class="modal-textarea">
+                    <input type="text" value="http://www.naver.com/" id="myInput">
+                    <a class="link-btn" onclick="copyLink()">복사</a>
+                </div>
+            </div>
+            <div class="modal-btn-groups flex-row-center">
+                <div class="modal-btn-group flex-column-center" id="toPage"><a class="move-page" href="http://www.naver.com">페이지로 이동</a></div>
+                <div class="modal-btn-group flex-column-center" id="closeModal"><a class="close-modal" href="#">닫기</a></div>
+            </div>
+        </div>             
+    </section>
+
+    <script>
+            //var count = 1;
+            $('.member-add-btn').click(function(){
+                $.ajax({
+                    //count : count,
+                    success:function(data){
+                var html = '<div class="member-card">';
+                html += '<img src="/Users/soonhojang/Documents/myProject/front-end/icon1.svg" width="42px" height="42px">';
+                html += '<div class="member-info">';
+                    html += '<div class="member-name"><input type="text" placeholder="이름" id="name"></div>'
+                    html += '<div class="member-tags">';
+                        html += '<div id="NO_DRINK" onclick="drinkchange(this)">안마심</div>'
+                        html += '<div id="LATE" onclick="latechange(this)">늦게옴</div>'
+                        html += '<div id="EARLY" onclick="earlychange(this)">일찍감</div>'
+                        html += '<div id="PASS" onclick="passchange(this)">면제</div>'
+                        html += '<input type="hidden" id="noDrink" value="0">';
+                        html += '<input type="hidden" id="late" value="0">';
+                        html += '<input type="hidden" id="early" value="0">';
+                        html += '<input type="hidden" id="pass" value="0">';
+                    html += '</div>'
+                html += '</div>'
+                html += '<div class="member-submit-btn" onclick="formsend(this)"><img src="/Users/soonhojang/Documents/myProject/front-end/cross-out.svg" class="cross-out-img"></div>'
+    html += '</div>'
+                        $('.members-parent').append(html);
+                        //count += 1;
+                    }
+                })
+            })
+    
+        // $("#LATE").click(function() {
+        //     document.getElementById('LATE').setAttribute('class', 'lateClass');
+        // });
+    
+        function drinkchange(obj) {
+            console.log(obj)
+            $(obj).toggleClass("changed");
+            if($(obj).parent().children('#noDrink').val() == '1') {
+                $(obj).parent().children('#noDrink').val('0')
+            } else if($(obj).parent().children('#noDrink').val() == '0') {
+                $(obj).parent().children('#noDrink').val('1')
+            }
+        }
+    
+        function latechange(obj) {
+            console.log(obj)
+            $(obj).toggleClass("changed");
+            if($(obj).parent().children('#late').val() == '1') {
+                $(obj).parent().children('#late').val('0')
+            } else if($(obj).parent().children('#late').val() == '0') {
+                $(obj).parent().children('#late').val('1')
+            }
+        }
+    
+        function earlychange(obj) {
+            console.log(obj)
+            $(obj).toggleClass("changed");
+            if($(obj).parent().children('#early').val() == '1') {
+                $(obj).parent().children('#early').val('0')
+            } else if($(obj).parent().children('#early').val() == '0') {
+                $(obj).parent().children('#early').val('1')
+            }
+        }
+    
+        function passchange(obj) {
+            console.log(obj)
+            $(obj).toggleClass("changed");
+            if($(obj).parent().children('#pass').val() == '1') {
+                $(obj).parent().children('#pass').val('0')
+            } else if($(obj).parent().children('#pass').val() == '0') {
+                $(obj).parent().children('#pass').val('1')
+            }
+        }
+    
+        var sendingData = new Object();
+    
+        function formsend(obj) {
+            sendingData.name = $(obj).parent().children().children().children('#name').val();
+            var chk1= $(obj).parent().children().children().children('#noDrink').val();
+            var chk2= $(obj).parent().children().children().children('#late').val();
+            var chk3= $(obj).parent().children().children().children('#early').val();
+            var chk4= $(obj).parent().children().children().children('#pass').val();
+    
+            var tagArr = [];
+    
+            if(chk1 == 1) {
+                tagArr.push("noDrink");
+            }
+            if(chk2 == 1) {
+                tagArr.push("late");
+            }
+            if(chk3 == 1) {
+                tagArr.push("early");
+            }
+            if(chk4 == 1) {
+                tagArr.push("pass");
+            }
+            sendingData.roomId = 1;
+            sendingData.tags = tagArr;
+            console.log(obj)
+            console.log($(obj).parent().children().children().children('#name').val())
+            console.log($(obj).parent().children().children().children('#noDrink').val())
+            
+            console.log(sendingData);
+    
+            $.ajax({
+                method:"POST",
+                url:'http://13.209.41.53:8080/rooms/1/users',
+                data : JSON.stringify(sendingData),
+                contentType: "application/json",
+                    success:function(data){
+                    console.log("success");
+                    $(obj).parent().attr('id',data.userId);
+                },
+                error:function(error) {
+                    console.log("error");
+                }
+            })
+        }        
+    
+        function linksend(obj) {
+            var linkData = new Object();
+            linkData.drinkPrice = $(obj).parent().children().children('.price-drink').text();
+            linkData.snackPrice = $(obj).parent().children().children('.price-snack').text();
+            linkData.totalPrice = $(obj).parent().children().children('.price-total').text();
+            //console.log($(obj).parent().children().children('.price-total').text());
+    
+    
+            $('.make-link').click(function(){
+                $.ajax({
+                    method:"PUT",
+                    url:'http://13.209.41.53:8080/rooms/1',
+                    data : JSON.stringify(linkData),
+                    contentType: "application/json",
+                        success:function(data){
+                        console.log("success");
+                    },
+                    error:function(error) {
+                        console.log("error");
+                    }
+                })
+            });
+        }
+        </script>
+
+    <footer class="sticky-container">
+        <div class="copyright">Copyright © gr8 Corp. All Rights Reserved.</div>
+    </footer>
+</body>
+</html>
