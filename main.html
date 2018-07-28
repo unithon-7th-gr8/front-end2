@@ -94,7 +94,7 @@
                 var html = '<div class="member-card">';
                 html += '<img src="/Users/soonhojang/Documents/myProject/front-end/icon1.svg" width="42px" height="42px">';
                 html += '<div class="member-info">';
-                    html += '<div class="member-name"><input type="text" placeholder="이름" id="name"></div>'
+                    html += '<div class="member-name"><input type="text" placeholder="이름" id="name" onkeydown="enterKeyDown(event,this)"></div>'
                     html += '<div class="member-tags">';
                         html += '<div id="NO_DRINK" onclick="drinkchange(this)">안마심</div>'
                         html += '<div id="LATE" onclick="latechange(this)">늦게옴</div>'
@@ -161,11 +161,34 @@
         var sendingData = new Object();
     
         function formsend(obj) {
-            sendingData.name = $(obj).parent().children().children().children('#name').val();
-            var chk1= $(obj).parent().children().children().children('#noDrink').val();
-            var chk2= $(obj).parent().children().children().children('#late').val();
-            var chk3= $(obj).parent().children().children().children('#early').val();
-            var chk4= $(obj).parent().children().children().children('#pass').val();
+            
+    
+            // $('.member-submit-btn').click(function(){
+            //     $.ajax({
+            //         method:"POST",
+            //         url:'http://13.209.41.53:8080/rooms/1/users',
+            //         data : JSON.stringify(sendingData),
+            //         contentType: "application/json",
+            //             success:function(data){
+            //             console.log("success");
+            //             console.log(data);
+    
+            //         },
+            //         error:function(error) {
+            //             console.log("error");
+            //         }
+            //     })
+            // });
+        }
+
+        function enterKeyDown(event,obj) {
+            //console.log(event.keyCode);
+            if(event.keyCode == 13) {
+            sendingData.name = $(obj).val();
+            var chk1= $(obj).parent().parent().children().children('#noDrink').val();
+            var chk2= $(obj).parent().parent().children().children('#late').val();
+            var chk3= $(obj).parent().parent().children().children('#early').val();
+            var chk4= $(obj).parent().parent().children().children('#pass').val();
     
             var tagArr = [];
     
@@ -183,9 +206,6 @@
             }
             sendingData.roomId = 1;
             sendingData.tags = tagArr;
-            console.log(obj)
-            console.log($(obj).parent().children().children().children('#name').val())
-            console.log($(obj).parent().children().children().children('#noDrink').val())
             
             console.log(sendingData);
     
@@ -196,13 +216,14 @@
                 contentType: "application/json",
                     success:function(data){
                     console.log("success");
-                    $(obj).parent().attr('id',data.userId);
+                    $(obj).parent().parent().parent().attr('id',data.userId);
                 },
                 error:function(error) {
                     console.log("error");
                 }
             })
-        }        
+            }
+        }
     
         function linksend(obj) {
             var linkData = new Object();
